@@ -19,6 +19,7 @@ metadata:
   labels:
     app: emailservice
 spec:
+  replicas: 3
   selector:
     matchLabels:
       app: emailservice
