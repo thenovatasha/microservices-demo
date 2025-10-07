@@ -19,7 +19,6 @@ metadata:
   labels:
     app: currencyservice
 spec:
-  replicas: 3
   selector:
     matchLabels:
       app: currencyservice
@@ -44,7 +43,7 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: us-central1-docker.pkg.dev/google-samples/microservices-demo/frontend:v0.10.3
+        image: us-central1-docker.pkg.dev/google-samples/microservices-demo/currencyservice:v0.10.3
         ports:
         - name: grpc
           containerPort: 7000
