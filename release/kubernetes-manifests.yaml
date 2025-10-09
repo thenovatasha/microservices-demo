@@ -67,10 +67,10 @@ spec:
             port: 8080
         resources:
           requests:
-            cpu: 100m
+            cpu: 75m
             memory: 64Mi
           limits:
-            cpu: 200m
+            cpu: 75m
             memory: 128Mi
 ---
 apiVersion: v1
@@ -149,7 +149,7 @@ spec:
             value: "cartservice:7070"
           resources:
             requests:
-              cpu: 100m
+              cpu: 200m
               memory: 64Mi
             limits:
               cpu: 200m
@@ -182,6 +182,7 @@ metadata:
   labels:
     app: recommendationservice
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: recommendationservice
@@ -210,13 +211,15 @@ spec:
         ports:
         - containerPort: 8080
         readinessProbe:
-          periodSeconds: 5
+          periodSeconds: 10
           grpc:
             port: 8080
+          timeoutSeconds: 5
         livenessProbe:
-          periodSeconds: 5
+          periodSeconds: 10
           grpc:
             port: 8080
+          timeoutSeconds: 5
         env:
         - name: PORT
           value: "8080"
@@ -226,11 +229,11 @@ spec:
           value: "1"
         resources:
           requests:
-            cpu: 100m
+            cpu: 700m
             memory: 220Mi
           limits:
-            cpu: 200m
-            memory: 450Mi
+            cpu: 700m
+            memory: 650Mi
 ---
 apiVersion: v1
 kind: Service
@@ -259,6 +262,7 @@ metadata:
   labels:
     app: frontend
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: frontend
@@ -339,11 +343,11 @@ spec:
           #   value: "" # This value would look like "http://123.123.123"
           resources:
             requests:
-              cpu: 100m
-              memory: 64Mi
+              cpu: 1000m
+              memory: 124Mi
             limits:
-              cpu: 200m
-              memory: 128Mi
+              cpu: 1000m
+              memory: 228Mi
 ---
 apiVersion: v1
 kind: Service
@@ -428,10 +432,10 @@ spec:
         resources:
           requests:
             cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 200m
             memory: 128Mi
+          limits:
+            cpu: 100m
+            memory: 248Mi
 ---
 apiVersion: v1
 kind: Service
@@ -500,10 +504,10 @@ spec:
             port: 3550
         resources:
           requests:
-            cpu: 100m
+            cpu: 800m
             memory: 64Mi
           limits:
-            cpu: 200m
+            cpu: 900m
             memory: 128Mi
 ---
 apiVersion: v1
@@ -565,10 +569,10 @@ spec:
           value: "redis-cart:6379"
         resources:
           requests:
-            cpu: 200m
+            cpu: 600m
             memory: 64Mi
           limits:
-            cpu: 300m
+            cpu: 700m
             memory: 128Mi
         readinessProbe:
           initialDelaySeconds: 15
@@ -644,12 +648,12 @@ spec:
         - mountPath: /data
           name: redis-data
         resources:
+          requests:
+            cpu: 75m
+            memory: 200Mi
           limits:
             memory: 256Mi
-            cpu: 125m
-          requests:
-            cpu: 70m
-            memory: 200Mi
+            cpu: 100m
       volumes:
       - name: redis-data
         emptyDir: {}
@@ -668,93 +672,6 @@ spec:
   - name: tcp-redis
     port: 6379
     targetPort: 6379
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: loadgenerator
-  labels:
-    app: loadgenerator
-spec:
-  selector:
-    matchLabels:
-      app: loadgenerator
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: loadgenerator
-      annotations:
-        sidecar.istio.io/rewriteAppHTTPProbers: "true"
-    spec:
-      serviceAccountName: loadgenerator
-      terminationGracePeriodSeconds: 5
-      restartPolicy: Always
-      securityContext:
-        fsGroup: 1000
-        runAsGroup: 1000
-        runAsNonRoot: true
-        runAsUser: 1000
-      initContainers:
-      - command:
-        - /bin/sh
-        - -exc
-        - |
-          MAX_RETRIES=12
-          RETRY_INTERVAL=10
-          for i in $(seq 1 $MAX_RETRIES); do
-            echo "Attempt $i: Pinging frontend: ${FRONTEND_ADDR}..."
-            STATUSCODE=$(wget --server-response http://${FRONTEND_ADDR} 2>&1 | awk '/^  HTTP/{print $2}')
-            if [ $STATUSCODE -eq 200 ]; then
-                echo "Frontend is reachable."
-                exit 0
-            fi
-            echo "Error: Could not reach frontend - Status code: ${STATUSCODE}"
-            sleep $RETRY_INTERVAL
-          done
-          echo "Failed to reach frontend after $MAX_RETRIES attempts."
-          exit 1
-        name: frontend-check
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-              - ALL
-          privileged: false
-          readOnlyRootFilesystem: true
-        image: busybox:latest
-        env:
-        - name: FRONTEND_ADDR
-          value: "frontend:80"
-      containers:
-      - name: main
-        securityContext:
-          allowPrivilegeEscalation: false
-          capabilities:
-            drop:
-              - ALL
-          privileged: false
-          readOnlyRootFilesystem: true
-        image: us-central1-docker.pkg.dev/google-samples/microservices-demo/loadgenerator:v0.10.3
-        env:
-        - name: FRONTEND_ADDR
-          value: "frontend:80"
-        - name: USERS
-          value: "10"
-        - name: RATE
-          value: "1"
-        resources:
-          requests:
-            cpu: 300m
-            memory: 256Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: loadgenerator
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -799,16 +716,22 @@ spec:
         readinessProbe:
           grpc:
             port: 7000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
         livenessProbe:
           grpc:
             port: 7000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
         resources:
           requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 200m
+            cpu: 1200m
             memory: 128Mi
+          limits:
+            cpu: 1200m
+            memory: 256Mi
 ---
 apiVersion: v1
 kind: Service
@@ -880,7 +803,7 @@ spec:
             cpu: 100m
             memory: 64Mi
           limits:
-            cpu: 200m
+            cpu: 150m
             memory: 128Mi
 ---
 apiVersion: v1
@@ -942,7 +865,7 @@ spec:
           value: "9555"
         resources:
           requests:
-            cpu: 200m
+            cpu: 300m
             memory: 180Mi
           limits:
             cpu: 300m
