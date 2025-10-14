@@ -70,7 +70,6 @@ spec:
             cpu: 75m
             memory: 64Mi
           limits:
-            cpu: 75m
             memory: 128Mi
 ---
 apiVersion: v1
@@ -152,7 +151,6 @@ spec:
               cpu: 200m
               memory: 64Mi
             limits:
-              cpu: 200m
               memory: 128Mi
 ---
 apiVersion: v1
@@ -232,7 +230,6 @@ spec:
             cpu: 700m
             memory: 220Mi
           limits:
-            cpu: 700m
             memory: 650Mi
 ---
 apiVersion: v1
@@ -343,10 +340,9 @@ spec:
           #   value: "" # This value would look like "http://123.123.123"
           resources:
             requests:
-              cpu: 1000m
+              cpu: 1200m
               memory: 124Mi
             limits:
-              cpu: 1000m
               memory: 228Mi
 ---
 apiVersion: v1
@@ -434,7 +430,6 @@ spec:
             cpu: 100m
             memory: 128Mi
           limits:
-            cpu: 100m
             memory: 248Mi
 ---
 apiVersion: v1
@@ -507,7 +502,6 @@ spec:
             cpu: 800m
             memory: 64Mi
           limits:
-            cpu: 900m
             memory: 128Mi
 ---
 apiVersion: v1
@@ -572,7 +566,6 @@ spec:
             cpu: 600m
             memory: 64Mi
           limits:
-            cpu: 700m
             memory: 128Mi
         readinessProbe:
           initialDelaySeconds: 15
@@ -652,7 +645,6 @@ spec:
             cpu: 75m
             memory: 200Mi
           limits:
-            memory: 256Mi
             cpu: 100m
       volumes:
       - name: redis-data
@@ -727,10 +719,9 @@ spec:
           timeoutSeconds: 5
         resources:
           requests:
-            cpu: 1200m
+            cpu: 1000m
             memory: 128Mi
           limits:
-            cpu: 1200m
             memory: 256Mi
 ---
 apiVersion: v1
@@ -803,7 +794,6 @@ spec:
             cpu: 100m
             memory: 64Mi
           limits:
-            cpu: 150m
             memory: 128Mi
 ---
 apiVersion: v1
@@ -868,7 +858,6 @@ spec:
             cpu: 300m
             memory: 180Mi
           limits:
-            cpu: 300m
             memory: 300Mi
         readinessProbe:
           initialDelaySeconds: 20
