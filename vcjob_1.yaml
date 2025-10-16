@@ -1,0 +1,102 @@
+apiVersion: v1
+items:
+- apiVersion: batch.volcano.sh/v1alpha1
+  kind: Job
+  metadata:
+    creationTimestamp: "2025-10-16T16:39:35Z"
+    generateName: tensorflow-dist-mnist-
+    generation: 1
+    name: tensorflow-dist-mnist-hf9tm
+    namespace: default
+    resourceVersion: "2514227"
+    uid: 151f26c4-bea6-46b2-ab76-cc86b0a0c2a5
+  spec:
+    maxRetry: 3
+    minAvailable: 3
+    plugins:
+      env: []
+      svc: []
+    policies:
+    - action: RestartJob
+      event: PodEvicted
+    queue: default
+    schedulerName: volcano
+    tasks:
+    - maxRetry: 3
+      minAvailable: 1
+      name: ps
+      replicas: 1
+      template:
+        metadata: {}
+        spec:
+          containers:
+          - command:
+            - sh
+            - -c
+            - |
+              PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/&:2222/g' | sed 's/^/"/;s/$/"/' | tr "\n" ","`;
+              WORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/&:2222/g' | sed 's/^/"/;s/$/"/' | tr "\n" ","`;
+              export TF_CONFIG={\"cluster\":{\"ps\":[${PS_HOST}],\"worker\":[${WORKER_HOST}]},\"task\":{\"type\":\"ps\",\"index\":${VK_TASK_INDEX}},\"environment\":\"cloud\"};
+              python /var/tf_dist_mnist/dist_mnist.py
+            image: volcanosh/dist-mnist-tf-example:0.0.1
+            name: tensorflow
+            ports:
+            - containerPort: 2222
+              name: tfjob-port
+              protocol: TCP
+            resources: {}
+          restartPolicy: Never
+    - maxRetry: 3
+      minAvailable: 2
+      name: worker
+      policies:
+      - action: CompleteJob
+        event: TaskCompleted
+      replicas: 2
+      template:
+        metadata: {}
+        spec:
+          containers:
+          - command:
+            - sh
+            - -c
+            - |
+              PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/&:2222/g' | sed 's/^/"/;s/$/"/' | tr "\n" ","`;
+              WORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/&:2222/g' | sed 's/^/"/;s/$/"/' | tr "\n" ","`;
+              export TF_CONFIG={\"cluster\":{\"ps\":[${PS_HOST}],\"worker\":[${WORKER_HOST}]},\"task\":{\"type\":\"worker\",\"index\":${VK_TASK_INDEX}},\"environment\":\"cloud\"};
+              python /var/tf_dist_mnist/dist_mnist.py
+            image: volcanosh/dist-mnist-tf-example:0.0.1
+            name: tensorflow
+            ports:
+            - containerPort: 2222
+              name: tfjob-port
+              protocol: TCP
+            resources: {}
+          restartPolicy: Never
+  status:
+    conditions:
+    - lastTransitionTime: "2025-10-16T16:39:35Z"
+      status: Pending
+    - lastTransitionTime: "2025-10-16T16:39:35Z"
+      status: Pending
+    - lastTransitionTime: "2025-10-16T16:39:38Z"
+      status: Pending
+    - lastTransitionTime: "2025-10-16T16:39:38Z"
+      status: Pending
+    - lastTransitionTime: "2025-10-16T16:39:39Z"
+      status: Running
+    - lastTransitionTime: "2025-10-16T16:41:37Z"
+      status: Running
+    - lastTransitionTime: "2025-10-16T16:41:37Z"
+      status: Completing
+    - lastTransitionTime: "2025-10-16T16:41:38Z"
+      status: Completed
+    minAvailable: 3
+    runningDuration: 2m3s
+    state:
+      lastTransitionTime: "2025-10-16T16:41:38Z"
+      phase: Completed
+    version: 7
+kind: List
+metadata:
+  resourceVersion: ""

@@ -33,6 +33,7 @@ spec:
       labels:
         app: emailservice
     spec:
+      schedulerName: volcano
       serviceAccountName: emailservice
       terminationGracePeriodSeconds: 5
       securityContext:
@@ -105,6 +106,7 @@ spec:
       labels:
         app: checkoutservice
     spec:
+      schedulerName: volcano
       serviceAccountName: checkoutservice
       securityContext:
         fsGroup: 1000
@@ -185,6 +187,7 @@ spec:
       labels:
         app: recommendationservice
     spec:
+      schedulerName: volcano
       serviceAccountName: recommendationservice
       terminationGracePeriodSeconds: 5
       securityContext:
@@ -264,6 +267,7 @@ spec:
       annotations:
         sidecar.istio.io/rewriteAppHTTPProbers: "true"
     spec:
+      schedulerName: volcano
       serviceAccountName: frontend
       securityContext:
         fsGroup: 1000
@@ -387,6 +391,7 @@ spec:
       labels:
         app: paymentservice
     spec:
+      schedulerName: volcano
       serviceAccountName: paymentservice
       terminationGracePeriodSeconds: 5
       securityContext:
@@ -457,6 +462,7 @@ spec:
       labels:
         app: productcatalogservice
     spec:
+      schedulerName: volcano
       serviceAccountName: productcatalogservice
       terminationGracePeriodSeconds: 5
       securityContext:
@@ -527,6 +533,7 @@ spec:
       labels:
         app: cartservice
     spec:
+      schedulerName: volcano
       serviceAccountName: cartservice
       terminationGracePeriodSeconds: 5
       securityContext:
@@ -598,6 +605,7 @@ spec:
       labels:
         app: redis-cart
     spec:
+      schedulerName: volcano
       securityContext:
         fsGroup: 1000
         runAsGroup: 1000
@@ -664,6 +672,7 @@ spec:
       labels:
         app: currencyservice
     spec:
+      schedulerName: volcano
       serviceAccountName: currencyservice
       terminationGracePeriodSeconds: 5
       securityContext:
@@ -741,6 +750,7 @@ spec:
       labels:
         app: shippingservice
     spec:
+      schedulerName: volcano
       serviceAccountName: shippingservice
       securityContext:
         fsGroup: 1000
@@ -811,6 +821,7 @@ spec:
       labels:
         app: adservice
     spec:
+      schedulerName: volcano
       serviceAccountName: adservice
       terminationGracePeriodSeconds: 5
       securityContext:
