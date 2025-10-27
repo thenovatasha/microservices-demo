@@ -13,7 +13,7 @@ echo "Fetching completed vcjobs..."
 
 # Get all vcjobs and filter for Completed state
 # Using jsonpath to extract data reliably
-COMPLETED_JOBS=$(kubectl get vcjob -o json | jq -r '.items[] | select(.status.state.phase == "Completed") | .metadata.name')
+COMPLETED_JOBS=$(kubectl get vcjob -o json | jq -r '.items[] | select(.status.state == "Completed") | .metadata.name')
 
 if [ -z "$COMPLETED_JOBS" ]; then
     echo "No completed vcjobs found."
@@ -81,3 +81,4 @@ if [ $count -gt 0 ]; then
 else
     echo "No valid metrics found to calculate average."
 fi
+
