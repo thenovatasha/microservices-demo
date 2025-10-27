@@ -3,13 +3,13 @@ class BurstyArrivalShape(LoadTestShape):
 
     # burst schedule: (time_seconds, user_count, duration)
     # Format: At time T, ramp to N users over D seconds
+
     bursts = [
-        (10, 20, 5),    # At 10s: burst to 20 users in 5 seconds
-        (40, 50, 10),
-        (80, 100, 15),
-        (120, 30, 5),
-        (150, 80, 8),
-        (200, 10, 5),
+        (0, 2000, 60),      # Ramp to 2000 users in 1 minute (start)
+        (300, 150, 60),     # Drop to ~150 users after 5 minutes
+        (600, 2000, 60),    # Ramp up again after 10 minutes
+        (900, 150, 60),     # Drop again after 15 minutes
+        (1200, 2000, 60),   # Final ramp up after 20 minutes
     ]
     time_limit = 250
 
