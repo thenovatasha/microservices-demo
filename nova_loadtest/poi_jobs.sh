@@ -7,12 +7,13 @@ gen=$(./poi_arrivals.sh $mean $n)      # path to the generator script
 
 # Read generated inter-arrival times into an array
 mapfile -t delays < <(echo "$gen" | tr ',' '\n')
-echo "${delays[@]}"
+echo "Starting all jobs: $ts"
 for d in "${delays[@]}"; do
   sleep "$d"                    # sleep the inter-arrival time
   ts=$(date -Is)                # ISO-8601 timestamp
   echo "Submitting job at time: $ts (slept ${d}s)"
-  # TODO: replace the echo below with kube jobs
-  # kubectl create -f job.yaml
+  JOB_NAME="$(kubectl create -f tf_tasks/tf_alex_mini.yaml -n "$NS" -o jsonpath='{.metadata.name}')"
+  echo "Started: $JOB_NAME"
+
 done
 

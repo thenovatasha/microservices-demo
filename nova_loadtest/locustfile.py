@@ -18,6 +18,7 @@ import random
 from locust import FastHttpUser, TaskSet, between, constant_throughput
 from faker import Faker
 import datetime
+from load_shapes.bursty_shape import BurstyArrivalShape
 fake = Faker()
 
 products = [
@@ -77,7 +78,7 @@ def logout(l):
 
 class UserBehavior(TaskSet):
 
-    constant_throughput = 100
+    # constant_throughput = 100
     def on_start(self):
         index(self)
 
