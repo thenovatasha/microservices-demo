@@ -1,0 +1,27 @@
+{
+  "name": "microservices-demo",
+  "version": "1.0.0",
+  "description": "<!-- <p align=\"center\"> <img src=\"/src/frontend/static/icons/Hipster_HeroLogoMaroon.svg\" width=\"300\" alt=\"Online Boutique\" /> </p> --> ![Continuous Integration](https://github.com/GoogleCloudPlatform/microservices-demo/workflows/Continuous%20Integration%20-%20Main/Release/badge.svg)",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thenovatasha/microservices-demo.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/thenovatasha/microservices-demo/issues"
+  },
+  "homepage": "https://github.com/thenovatasha/microservices-demo#readme",
+  "dependencies": {
+    "simple-statistics": "^7.8.8"
+  }
+}
