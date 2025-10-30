@@ -1,41 +1,46 @@
-from locust import HttpUser, task, LoadTestShape
+from locust import LoadTestShape
+
 class BurstyArrivalShape(LoadTestShape):
-
-    # burst schedule: (time_seconds, user_count, duration)
-    # Format: At time T, ramp to N users over D seconds
-
+    """
+    bursts: list of (start_time_seconds, target_users, ramp_duration_seconds).
+    At time T, move from the previous target to target_users over ramp_duration.
+    """
     bursts = [
-        (0, 2000, 60),      # Ramp to 2000 users in 1 minute (start)
-        (300, 100, 60),     # Drop to ~150 users after 5 minutes
-        (600, 2000, 60),    # Ramp up again after 10 minutes
-        (900, 100, 60),     # Drop again after 15 minutes
-        (1200, 2000, 60),   # Final ramp up after 20 minutes
-        (1800, 100, 60),    # Final ramp down after 20 minutes
+        (0,    2000, 60),   # to 2000 in 60s
+        (300,   100, 60),   # to 100 in 60s
+        (600,  2000, 60),   # to 2000 in 60s
+        (900,   100, 60),   # to 100 in 60s
+        (1200, 2000, 60),   # to 2000 in 60s
+        (1800,  100, 60),   # to 100 in 60s
     ]
     time_limit = 2200
 
     def tick(self):
         run_time = self.get_run_time()
-
         if run_time > self.time_limit:
             return None
 
-        # Find the current burst phase
-        current_users = 0
-        spawn_rate = 1
+        # Before the first burst starts
+        if run_time < self.bursts[0][0]:
+            return (0, 1)
 
-        for i, (burst_time, burst_users, burst_duration) in enumerate(self.bursts):
-            if run_time >= burst_time:
-                if i + 1 < len(self.bursts):
-                    next_burst_time = self.bursts[i + 1][0]
-                    if run_time < next_burst_time:
-                        # We're in this burst
-                        current_users = burst_users
-                        spawn_rate = max(1, burst_users / burst_duration)
-                        break
-                else:
-                    # Last burst
-                    current_users = burst_users
-                    spawn_rate = max(1, burst_users / burst_duration)
+        # Find the active phase (the last burst whose start_time <= run_time)
+        active_idx = 0
+        for i, (t, _, _) in enumerate(self.bursts):
+            if run_time >= t:
+                active_idx = i
+            else:
+                break
 
-        return (int(current_users), spawn_rate)
+        # Current phase target and duration
+        t_start, target_users, duration = self.bursts[active_idx]
+
+        # Previous phase target (0 before the first burst)
+        prev_target = self.bursts[active_idx - 1][1] if active_idx > 0 else 0
+
+        # Spawn rate needed to reach target from previous target within this phase's duration
+        delta = abs(target_users - prev_target)
+        spawn_rate = max(1, delta / max(1, duration))  # users per second
+
+        # Hold last target after the final phase
+        return (int(target_users), spawn_rate)
