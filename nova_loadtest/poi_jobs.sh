@@ -12,12 +12,12 @@ echo "Starting all jobs: $ts"
 echo "${delays[@]}"
 submitted=0
 for d in "${delays[@]}"; do
-  submitted+=1
   sleep "$d"                    # sleep the inter-arrival time
   ts=$(date -Is)                # ISO-8601 timestamp
   echo "Submitting job at time: $ts (slept ${d}s)"
   JOB_NAME="$(kubectl create -f ../tf_tasks/tf_alex_mini-2.yaml -n "$NS" -o jsonpath='{.metadata.name}')"
   echo "Started: $JOB_NAME"
-  echo "Submitted: $submitted"
+  echo "Submitted: $((submitted++)) jobs so far. Remaining: $((n - submitted))"
+
 done
 

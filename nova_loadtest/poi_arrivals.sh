@@ -5,7 +5,7 @@ mean=${1:-160}
 n=${2:-5}
 
 awk -v mean="$mean" -v n="$n" 'BEGIN{
-  srand()
+  srand(173028114)
   for(i=1;i<=n;i++){
     u = rand()                  # U ~ Uniform(0,1)
     x = -mean * log(1 - u)      # Exponential(mean)
@@ -13,5 +13,3 @@ awk -v mean="$mean" -v n="$n" 'BEGIN{
   }
 }'
 
-# Returns:
-#
