@@ -1,0 +1,41 @@
+Starting all jobs: 2025-10-30T20:56:25+00:00
+13  60  65  19  20  11  23  96  4  18  19  47  21  149  70  32  32  55  129  20  252  0  111  26  14  123  10  185  82  44  46  60  1  176  133  48  2  2  3  4  56  2  25  75  187  79  58  6  5  19  165  269  201  261  30  143  24  2  28  33
+Submitting job at time: 2025-10-30T20:56:38+00:00 (slept 13s)
+Started: tensorflow-benchmark-alex-mini-v2-r8qkb
+Submitted: 0 jobs so far. Remaining: 59
+Submitting job at time: 2025-10-30T20:57:38+00:00 (slept  60s)
+Started: tensorflow-benchmark-alex-mini-v2-vbblt
+Submitted: 1 jobs so far. Remaining: 58
+Submitting job at time: 2025-10-30T20:58:43+00:00 (slept  65s)
+Started: tensorflow-benchmark-alex-mini-v2-627pm
+Submitted: 2 jobs so far. Remaining: 57
+Submitting job at time: 2025-10-30T20:59:02+00:00 (slept  19s)
+Started: tensorflow-benchmark-alex-mini-v2-jfc2z
+Submitted: 3 jobs so far. Remaining: 56
+Submitting job at time: 2025-10-30T20:59:22+00:00 (slept  20s)
+Started: tensorflow-benchmark-alex-mini-v2-kxz2r
+Submitted: 4 jobs so far. Remaining: 55
+Submitting job at time: 2025-10-30T20:59:34+00:00 (slept  11s)
+Started: tensorflow-benchmark-alex-mini-v2-vjr4n
+Submitted: 5 jobs so far. Remaining: 54
+Submitting job at time: 2025-10-30T20:59:57+00:00 (slept  23s)
+Started: tensorflow-benchmark-alex-mini-v2-jthhw
+Submitted: 6 jobs so far. Remaining: 53
+Submitting job at time: 2025-10-30T21:01:33+00:00 (slept  96s)
+Started: tensorflow-benchmark-alex-mini-v2-s55z4
+Submitted: 7 jobs so far. Remaining: 52
+Submitting job at time: 2025-10-30T21:01:37+00:00 (slept  4s)
+Started: tensorflow-benchmark-alex-mini-v2-z95gz
+Submitted: 8 jobs so far. Remaining: 51
+Submitting job at time: 2025-10-30T21:01:55+00:00 (slept  18s)
+Started: tensorflow-benchmark-alex-mini-v2-k9bn2
+Submitted: 9 jobs so far. Remaining: 50
+Submitting job at time: 2025-10-30T21:02:15+00:00 (slept  19s)
+Started: tensorflow-benchmark-alex-mini-v2-29x5m
+Submitted: 10 jobs so far. Remaining: 49
+Submitting job at time: 2025-10-30T21:03:02+00:00 (slept  47s)
+Started: tensorflow-benchmark-alex-mini-v2-2tq7t
+Submitted: 11 jobs so far. Remaining: 48
+Submitting job at time: 2025-10-30T21:03:24+00:00 (slept  21s)
+Started: tensorflow-benchmark-alex-mini-v2-559dh
+Submitted: 12 jobs so far. Remaining: 47
