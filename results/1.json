@@ -1,0 +1,1629 @@
+{
+    "apiVersion": "v1",
+    "items": [
+        {
+            "apiVersion": "batch.volcano.sh/v1alpha1",
+            "kind": "Job",
+            "metadata": {
+                "creationTimestamp": "2025-10-30T02:55:50Z",
+                "generateName": "tensorflow-benchmark-alex-mini-v2-",
+                "generation": 1,
+                "name": "tensorflow-benchmark-alex-mini-v2-2glqw",
+                "namespace": "default",
+                "resourceVersion": "4990155",
+                "uid": "f6de4356-491a-45e4-9e34-a20c74c76fd3"
+            },
+            "spec": {
+                "maxRetry": 3,
+                "minAvailable": 3,
+                "plugins": {
+                    "env": [],
+                    "svc": []
+                },
+                "policies": [
+                    {
+                        "action": "RestartJob",
+                        "event": "PodEvicted"
+                    }
+                ],
+                "queue": "default",
+                "schedulerName": "volcano",
+                "tasks": [
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 1,
+                        "name": "ps",
+                        "replicas": 1,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=ps --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "600Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    },
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 2,
+                        "name": "worker",
+                        "policies": [
+                            {
+                                "action": "CompleteJob",
+                                "event": "TaskCompleted"
+                            }
+                        ],
+                        "replicas": 2,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=worker --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "1000Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2025-10-30T02:55:50Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:55:50Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:55:53Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:55:53Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:55:54Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:59:54Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:59:54Z",
+                        "status": "Completing"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:59:54Z",
+                        "status": "Completed"
+                    }
+                ],
+                "minAvailable": 3,
+                "runningDuration": "4m4s",
+                "state": {
+                    "lastTransitionTime": "2025-10-30T02:59:54Z",
+                    "phase": "Completed"
+                },
+                "version": 7
+            }
+        },
+        {
+            "apiVersion": "batch.volcano.sh/v1alpha1",
+            "kind": "Job",
+            "metadata": {
+                "creationTimestamp": "2025-10-30T02:59:09Z",
+                "generateName": "tensorflow-benchmark-alex-mini-v2-",
+                "generation": 1,
+                "name": "tensorflow-benchmark-alex-mini-v2-5jrw7",
+                "namespace": "default",
+                "resourceVersion": "4992871",
+                "uid": "089f2ae8-f1a6-4c0f-82c5-1cf7c7579c78"
+            },
+            "spec": {
+                "maxRetry": 3,
+                "minAvailable": 3,
+                "plugins": {
+                    "env": [],
+                    "svc": []
+                },
+                "policies": [
+                    {
+                        "action": "RestartJob",
+                        "event": "PodEvicted"
+                    }
+                ],
+                "queue": "default",
+                "schedulerName": "volcano",
+                "tasks": [
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 1,
+                        "name": "ps",
+                        "replicas": 1,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=ps --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "600Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    },
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 2,
+                        "name": "worker",
+                        "policies": [
+                            {
+                                "action": "CompleteJob",
+                                "event": "TaskCompleted"
+                            }
+                        ],
+                        "replicas": 2,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=worker --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "1000Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2025-10-30T02:59:09Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:59:09Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:59:12Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:59:12Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:59:12Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:13:44Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:13:44Z",
+                        "status": "Completing"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:13:44Z",
+                        "status": "Completed"
+                    }
+                ],
+                "minAvailable": 3,
+                "runningDuration": "14m35s",
+                "state": {
+                    "lastTransitionTime": "2025-10-30T03:13:44Z",
+                    "phase": "Completed"
+                },
+                "version": 6
+            }
+        },
+        {
+            "apiVersion": "batch.volcano.sh/v1alpha1",
+            "kind": "Job",
+            "metadata": {
+                "creationTimestamp": "2025-10-30T02:58:46Z",
+                "generateName": "tensorflow-benchmark-alex-mini-v2-",
+                "generation": 1,
+                "name": "tensorflow-benchmark-alex-mini-v2-9x8d9",
+                "namespace": "default",
+                "resourceVersion": "4992660",
+                "uid": "ed4fb871-878d-46de-b760-992fe1102562"
+            },
+            "spec": {
+                "maxRetry": 3,
+                "minAvailable": 3,
+                "plugins": {
+                    "env": [],
+                    "svc": []
+                },
+                "policies": [
+                    {
+                        "action": "RestartJob",
+                        "event": "PodEvicted"
+                    }
+                ],
+                "queue": "default",
+                "schedulerName": "volcano",
+                "tasks": [
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 1,
+                        "name": "ps",
+                        "replicas": 1,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=ps --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "600Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    },
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 2,
+                        "name": "worker",
+                        "policies": [
+                            {
+                                "action": "CompleteJob",
+                                "event": "TaskCompleted"
+                            }
+                        ],
+                        "replicas": 2,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=worker --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "1000Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2025-10-30T02:58:46Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:58:47Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:58:50Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:58:50Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:58:50Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:12:59Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:13:00Z",
+                        "status": "Completing"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:13:00Z",
+                        "status": "Completed"
+                    }
+                ],
+                "minAvailable": 3,
+                "runningDuration": "14m14s",
+                "state": {
+                    "lastTransitionTime": "2025-10-30T03:13:00Z",
+                    "phase": "Completed"
+                },
+                "version": 8
+            }
+        },
+        {
+            "apiVersion": "batch.volcano.sh/v1alpha1",
+            "kind": "Job",
+            "metadata": {
+                "creationTimestamp": "2025-10-30T03:00:49Z",
+                "generateName": "tensorflow-benchmark-alex-mini-v2-",
+                "generation": 1,
+                "name": "tensorflow-benchmark-alex-mini-v2-cnfbt",
+                "namespace": "default",
+                "resourceVersion": "4992929",
+                "uid": "e2ed47bf-68bb-45ba-aeb8-30478abd123e"
+            },
+            "spec": {
+                "maxRetry": 3,
+                "minAvailable": 3,
+                "plugins": {
+                    "env": [],
+                    "svc": []
+                },
+                "policies": [
+                    {
+                        "action": "RestartJob",
+                        "event": "PodEvicted"
+                    }
+                ],
+                "queue": "default",
+                "schedulerName": "volcano",
+                "tasks": [
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 1,
+                        "name": "ps",
+                        "replicas": 1,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=ps --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "600Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    },
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 2,
+                        "name": "worker",
+                        "policies": [
+                            {
+                                "action": "CompleteJob",
+                                "event": "TaskCompleted"
+                            }
+                        ],
+                        "replicas": 2,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=worker --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "1000Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2025-10-30T03:00:49Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:00:50Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:00:53Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:00:53Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:00:53Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:14:06Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:14:06Z",
+                        "status": "Completing"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:14:06Z",
+                        "status": "Completed"
+                    }
+                ],
+                "minAvailable": 3,
+                "runningDuration": "13m17s",
+                "state": {
+                    "lastTransitionTime": "2025-10-30T03:14:06Z",
+                    "phase": "Completed"
+                },
+                "version": 7
+            }
+        },
+        {
+            "apiVersion": "batch.volcano.sh/v1alpha1",
+            "kind": "Job",
+            "metadata": {
+                "creationTimestamp": "2025-10-30T02:58:14Z",
+                "generateName": "tensorflow-benchmark-alex-mini-v2-",
+                "generation": 1,
+                "name": "tensorflow-benchmark-alex-mini-v2-dzl7r",
+                "namespace": "default",
+                "resourceVersion": "4991007",
+                "uid": "17927eca-42fb-4ced-9ab3-8ebe022fb647"
+            },
+            "spec": {
+                "maxRetry": 3,
+                "minAvailable": 3,
+                "plugins": {
+                    "env": [],
+                    "svc": []
+                },
+                "policies": [
+                    {
+                        "action": "RestartJob",
+                        "event": "PodEvicted"
+                    }
+                ],
+                "queue": "default",
+                "schedulerName": "volcano",
+                "tasks": [
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 1,
+                        "name": "ps",
+                        "replicas": 1,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=ps --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "600Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    },
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 2,
+                        "name": "worker",
+                        "policies": [
+                            {
+                                "action": "CompleteJob",
+                                "event": "TaskCompleted"
+                            }
+                        ],
+                        "replicas": 2,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=worker --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "1000Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2025-10-30T02:58:15Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:58:15Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:58:19Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:58:19Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:58:19Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:03:35Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:03:35Z",
+                        "status": "Completing"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:03:35Z",
+                        "status": "Completed"
+                    }
+                ],
+                "minAvailable": 3,
+                "runningDuration": "5m21s",
+                "state": {
+                    "lastTransitionTime": "2025-10-30T03:03:35Z",
+                    "phase": "Completed"
+                },
+                "version": 7
+            }
+        },
+        {
+            "apiVersion": "batch.volcano.sh/v1alpha1",
+            "kind": "Job",
+            "metadata": {
+                "creationTimestamp": "2025-10-30T02:56:50Z",
+                "generateName": "tensorflow-benchmark-alex-mini-v2-",
+                "generation": 1,
+                "name": "tensorflow-benchmark-alex-mini-v2-lqpbz",
+                "namespace": "default",
+                "resourceVersion": "4991806",
+                "uid": "304cfd06-391d-44a4-a509-1175f785131a"
+            },
+            "spec": {
+                "maxRetry": 3,
+                "minAvailable": 3,
+                "plugins": {
+                    "env": [],
+                    "svc": []
+                },
+                "policies": [
+                    {
+                        "action": "RestartJob",
+                        "event": "PodEvicted"
+                    }
+                ],
+                "queue": "default",
+                "schedulerName": "volcano",
+                "tasks": [
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 1,
+                        "name": "ps",
+                        "replicas": 1,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=ps --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "600Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    },
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 2,
+                        "name": "worker",
+                        "policies": [
+                            {
+                                "action": "CompleteJob",
+                                "event": "TaskCompleted"
+                            }
+                        ],
+                        "replicas": 2,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=worker --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "1000Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2025-10-30T02:56:50Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:56:51Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:56:54Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:56:54Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:56:54Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:07:59Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:07:59Z",
+                        "status": "Completing"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:07:59Z",
+                        "status": "Completed"
+                    }
+                ],
+                "minAvailable": 3,
+                "runningDuration": "11m9s",
+                "state": {
+                    "lastTransitionTime": "2025-10-30T03:07:59Z",
+                    "phase": "Completed"
+                },
+                "version": 7
+            }
+        },
+        {
+            "apiVersion": "batch.volcano.sh/v1alpha1",
+            "kind": "Job",
+            "metadata": {
+                "creationTimestamp": "2025-10-30T02:58:35Z",
+                "generateName": "tensorflow-benchmark-alex-mini-v2-",
+                "generation": 1,
+                "name": "tensorflow-benchmark-alex-mini-v2-nk95r",
+                "namespace": "default",
+                "resourceVersion": "4992525",
+                "uid": "ed6983cc-f5bc-40da-a06a-f1642ae17ee6"
+            },
+            "spec": {
+                "maxRetry": 3,
+                "minAvailable": 3,
+                "plugins": {
+                    "env": [],
+                    "svc": []
+                },
+                "policies": [
+                    {
+                        "action": "RestartJob",
+                        "event": "PodEvicted"
+                    }
+                ],
+                "queue": "default",
+                "schedulerName": "volcano",
+                "tasks": [
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 1,
+                        "name": "ps",
+                        "replicas": 1,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=ps --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "600Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    },
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 2,
+                        "name": "worker",
+                        "policies": [
+                            {
+                                "action": "CompleteJob",
+                                "event": "TaskCompleted"
+                            }
+                        ],
+                        "replicas": 2,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=worker --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "1000Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2025-10-30T02:58:35Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:58:36Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:58:39Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:58:39Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:58:39Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:12:22Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:12:22Z",
+                        "status": "Completing"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:12:22Z",
+                        "status": "Completed"
+                    }
+                ],
+                "minAvailable": 3,
+                "runningDuration": "13m47s",
+                "state": {
+                    "lastTransitionTime": "2025-10-30T03:12:22Z",
+                    "phase": "Completed"
+                },
+                "version": 8
+            }
+        },
+        {
+            "apiVersion": "batch.volcano.sh/v1alpha1",
+            "kind": "Job",
+            "metadata": {
+                "creationTimestamp": "2025-10-30T03:00:45Z",
+                "generateName": "tensorflow-benchmark-alex-mini-v2-",
+                "generation": 1,
+                "name": "tensorflow-benchmark-alex-mini-v2-qnrmq",
+                "namespace": "default",
+                "resourceVersion": "4991342",
+                "uid": "58913079-6601-4ca3-874a-89c24ca5604f"
+            },
+            "spec": {
+                "maxRetry": 3,
+                "minAvailable": 3,
+                "plugins": {
+                    "env": [],
+                    "svc": []
+                },
+                "policies": [
+                    {
+                        "action": "RestartJob",
+                        "event": "PodEvicted"
+                    }
+                ],
+                "queue": "default",
+                "schedulerName": "volcano",
+                "tasks": [
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 1,
+                        "name": "ps",
+                        "replicas": 1,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=ps --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "600Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    },
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 2,
+                        "name": "worker",
+                        "policies": [
+                            {
+                                "action": "CompleteJob",
+                                "event": "TaskCompleted"
+                            }
+                        ],
+                        "replicas": 2,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=worker --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "1000Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2025-10-30T03:00:45Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:00:46Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:00:49Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:00:49Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:00:49Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:05:16Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:05:16Z",
+                        "status": "Completing"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:05:16Z",
+                        "status": "Completed"
+                    }
+                ],
+                "minAvailable": 3,
+                "runningDuration": "4m31s",
+                "state": {
+                    "lastTransitionTime": "2025-10-30T03:05:16Z",
+                    "phase": "Completed"
+                },
+                "version": 8
+            }
+        },
+        {
+            "apiVersion": "batch.volcano.sh/v1alpha1",
+            "kind": "Job",
+            "metadata": {
+                "creationTimestamp": "2025-10-30T03:01:07Z",
+                "generateName": "tensorflow-benchmark-alex-mini-v2-",
+                "generation": 1,
+                "name": "tensorflow-benchmark-alex-mini-v2-qpf7w",
+                "namespace": "default",
+                "resourceVersion": "4992947",
+                "uid": "17a9fb6e-1062-49e9-8df7-386f39f926cb"
+            },
+            "spec": {
+                "maxRetry": 3,
+                "minAvailable": 3,
+                "plugins": {
+                    "env": [],
+                    "svc": []
+                },
+                "policies": [
+                    {
+                        "action": "RestartJob",
+                        "event": "PodEvicted"
+                    }
+                ],
+                "queue": "default",
+                "schedulerName": "volcano",
+                "tasks": [
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 1,
+                        "name": "ps",
+                        "replicas": 1,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=ps --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "600Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    },
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 2,
+                        "name": "worker",
+                        "policies": [
+                            {
+                                "action": "CompleteJob",
+                                "event": "TaskCompleted"
+                            }
+                        ],
+                        "replicas": 2,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=worker --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "1000Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2025-10-30T03:01:07Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:01:08Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:01:11Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:01:11Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:01:12Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:14:10Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:14:11Z",
+                        "status": "Completing"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:14:11Z",
+                        "status": "Completed"
+                    }
+                ],
+                "minAvailable": 3,
+                "runningDuration": "13m4s",
+                "state": {
+                    "lastTransitionTime": "2025-10-30T03:14:11Z",
+                    "phase": "Completed"
+                },
+                "version": 7
+            }
+        },
+        {
+            "apiVersion": "batch.volcano.sh/v1alpha1",
+            "kind": "Job",
+            "metadata": {
+                "creationTimestamp": "2025-10-30T02:57:55Z",
+                "generateName": "tensorflow-benchmark-alex-mini-v2-",
+                "generation": 1,
+                "name": "tensorflow-benchmark-alex-mini-v2-xvvjr",
+                "namespace": "default",
+                "resourceVersion": "4991113",
+                "uid": "5dc64fb7-a7d4-4c36-a043-002ada40fef9"
+            },
+            "spec": {
+                "maxRetry": 3,
+                "minAvailable": 3,
+                "plugins": {
+                    "env": [],
+                    "svc": []
+                },
+                "policies": [
+                    {
+                        "action": "RestartJob",
+                        "event": "PodEvicted"
+                    }
+                ],
+                "queue": "default",
+                "schedulerName": "volcano",
+                "tasks": [
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 1,
+                        "name": "ps",
+                        "replicas": 1,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=ps --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "600Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    },
+                    {
+                        "maxRetry": 3,
+                        "minAvailable": 2,
+                        "name": "worker",
+                        "policies": [
+                            {
+                                "action": "CompleteJob",
+                                "event": "TaskCompleted"
+                            }
+                        ],
+                        "replicas": 2,
+                        "template": {
+                            "metadata": {},
+                            "spec": {
+                                "containers": [
+                                    {
+                                        "command": [
+                                            "sh",
+                                            "-c",
+                                            "PS_HOST=`cat /etc/volcano/ps.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\nWORKER_HOST=`cat /etc/volcano/worker.host | sed 's/$/\u0026:2222/g' | tr \"\\n\" \",\"`;\npython tf_cnn_benchmarks.py --batch_size=32 --num_batches=30 --model=alexnet --variable_update=parameter_server --flush_stdout=true --num_gpus=1 --local_parameter_device=cpu --device=cpu --data_format=NHWC --job_name=worker --task_index=${VK_TASK_INDEX} --ps_hosts=${PS_HOST} --worker_hosts=${WORKER_HOST}\n"
+                                        ],
+                                        "image": "volcanosh/example-tf:0.0.1",
+                                        "name": "tensorflow",
+                                        "ports": [
+                                            {
+                                                "containerPort": 2222,
+                                                "name": "tfjob-port",
+                                                "protocol": "TCP"
+                                            }
+                                        ],
+                                        "resources": {
+                                            "requests": {
+                                                "memory": "1000Mi"
+                                            }
+                                        },
+                                        "workingDir": "/opt/tf-benchmarks/scripts/tf_cnn_benchmarks"
+                                    }
+                                ],
+                                "imagePullSecrets": [
+                                    {
+                                        "name": "default-secret"
+                                    }
+                                ],
+                                "restartPolicy": "OnFailure"
+                            }
+                        }
+                    }
+                ]
+            },
+            "status": {
+                "conditions": [
+                    {
+                        "lastTransitionTime": "2025-10-30T02:57:55Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:57:55Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:57:59Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:57:59Z",
+                        "status": "Pending"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T02:57:59Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:04:06Z",
+                        "status": "Running"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:04:07Z",
+                        "status": "Completing"
+                    },
+                    {
+                        "lastTransitionTime": "2025-10-30T03:04:07Z",
+                        "status": "Completed"
+                    }
+                ],
+                "minAvailable": 3,
+                "runningDuration": "6m12s",
+                "state": {
+                    "lastTransitionTime": "2025-10-30T03:04:07Z",
+                    "phase": "Completed"
+                },
+                "version": 6
+            }
+        }
+    ],
+    "kind": "List",
+    "metadata": {
+        "resourceVersion": ""
+    }
+}
