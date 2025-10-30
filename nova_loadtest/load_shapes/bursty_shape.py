@@ -10,8 +10,9 @@ class BurstyArrivalShape(LoadTestShape):
         (600, 2000, 60),    # Ramp up again after 10 minutes
         (900, 150, 60),     # Drop again after 15 minutes
         (1200, 2000, 60),   # Final ramp up after 20 minutes
+        (1800, 150, 60),    # Final ramp down after 20 minutes
     ]
-    time_limit = 1800
+    time_limit = 2200
 
     def tick(self):
         run_time = self.get_run_time()
