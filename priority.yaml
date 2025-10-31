@@ -1,0 +1,18 @@
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: high-priority
+value: 1000000
+preemptionPolicy: PreemptLowerPriority
+globalDefault: false
+description: "High priority pods can preempt lower-priority ones."
+---
+apiVersion: scheduling.k8s.io/v1
+kind: PriorityClass
+metadata:
+  name: low-priority
+value: 100
+preemptionPolicy: PreemptLowerPriority
+globalDefault: false
+description: "Low priority pods can be preempted by higher-priority pods."
+

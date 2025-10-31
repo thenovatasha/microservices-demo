@@ -48,6 +48,7 @@ spec:
       name: ps
       template:
         spec:
+          priorityClassName: low-priority
           imagePullSecrets:
             - name: default-secret
           containers:
@@ -75,6 +76,7 @@ spec:
           action: CompleteJob
       template:
         spec:
+          priorityClassName: low-priority
           imagePullSecrets:
             - name: default-secret
           containers:

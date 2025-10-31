@@ -2,7 +2,7 @@ import fs from 'node:fs/promises';
 import { mean, median, standardDeviation, min, max } from 'simple-statistics';
 let jsonData = null;
 try {
-  const data = await fs.readFile('./results/3.json', { encoding: 'utf8' });
+  const data = await fs.readFile('./results/new.json', { encoding: 'utf8' });
   jsonData = JSON.parse(data);
 } catch (parseError) {
   console.error('Error parsing JSON:', parseError);
