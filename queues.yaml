@@ -1,0 +1,23 @@
+apiVersion: scheduling.volcano.sh/v1beta1
+kind: Queue
+metadata:
+  name: mq
+spec:
+  weight: 100
+  reclaimable: false
+  capability:
+    cpu: "100"
+    memory: "200Gi"
+  deserved: 90   # High deserved ratio → high priority for resource reclaim
+---
+apiVersion: scheduling.volcano.sh/v1beta1
+kind: Queue
+metadata:
+  name: bq
+spec:
+  weight: 10
+  reclaimable: true
+  capability:
+    cpu: "200"
+    memory: "400Gi"
+  deserved: 10   # Low deserved ratio → can give up resources when needed

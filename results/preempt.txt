@@ -1,0 +1,30 @@
+==========================
+Throughput:
+Total Jobs: 60
+Total Duration (seconds): 4420
+Throughput (jobs/second): 0.013574660633484163
+==========================
+==========================
+Run Time Statistics (seconds):
+Mean: 926.9333333333333
+Median: 570.5
+Standard Deviation: 625.2414164855754
+Min: 251
+Max: 2244
+==========================
+==========================
+Wait Time Statistics (seconds):
+Mean: 4.25
+Median: 4
+Standard Deviation: 0.8874119674649424
+Min: 3
+Max: 7
+==========================
+==========================
+Total Time Statistics (seconds):
+Mean: 931.1833333333333
+Median: 574.5
+Standard Deviation: 625.4946706851752
+Min: 254
+Max: 2248
+==========================
