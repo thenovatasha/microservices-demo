@@ -35,6 +35,7 @@ kind: Job
 metadata:
   generateName: tensorflow-benchmark-alex-mini-v2-
 spec:
+  queue: bq
   minAvailable: 3
   schedulerName: volcano
   plugins:

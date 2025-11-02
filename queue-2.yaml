@@ -1,0 +1,17 @@
+apiVersion: scheduling.volcano.sh/v1beta1
+kind: Queue
+metadata:
+  name: bq
+spec:
+  weight: 1
+  reclaimable: true
+  capability:
+    cpu: "200"
+    memory: "400Gi"
+  deserved:
+    cpu: "2"
+    memory: "10Gi"
+  guarantee:
+    resource:
+      cpu: "1"
+  # Low deserved ratio → can give up resources when needed

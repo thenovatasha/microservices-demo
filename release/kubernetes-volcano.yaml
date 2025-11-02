@@ -30,6 +30,8 @@ spec:
       app: emailservice
   template:
     metadata:
+      annotations:
+        scheduling.volcano.sh/queue-name: "mq"
       labels:
         app: emailservice
     spec:
@@ -104,6 +106,8 @@ spec:
       app: checkoutservice
   template:
     metadata:
+      annotations:
+        scheduling.volcano.sh/queue-name: "mq"
       labels:
         app: checkoutservice
     spec:
@@ -186,6 +190,8 @@ spec:
       app: recommendationservice
   template:
     metadata:
+      annotations:
+        scheduling.volcano.sh/queue-name: "mq"
       labels:
         app: recommendationservice
     spec:
@@ -265,6 +271,8 @@ spec:
       app: frontend
   template:
     metadata:
+      annotations:
+        scheduling.volcano.sh/queue-name: "mq"
       labels:
         app: frontend
       annotations:
@@ -392,6 +400,8 @@ spec:
       app: paymentservice
   template:
     metadata:
+      annotations:
+        scheduling.volcano.sh/queue-name: "mq"
       labels:
         app: paymentservice
     spec:
@@ -464,6 +474,8 @@ spec:
       app: productcatalogservice
   template:
     metadata:
+      annotations:
+        scheduling.volcano.sh/queue-name: "mq"
       labels:
         app: productcatalogservice
     spec:
@@ -536,6 +548,8 @@ spec:
       app: cartservice
   template:
     metadata:
+      annotations:
+        scheduling.volcano.sh/queue-name: "mq"
       labels:
         app: cartservice
     spec:
@@ -609,6 +623,8 @@ spec:
       app: redis-cart
   template:
     metadata:
+      annotations:
+        scheduling.volcano.sh/queue-name: "mq"
       labels:
         app: redis-cart
     spec:
@@ -677,6 +693,8 @@ spec:
       app: currencyservice
   template:
     metadata:
+      annotations:
+        scheduling.volcano.sh/queue-name: "mq"
       labels:
         app: currencyservice
     spec:
@@ -756,6 +774,8 @@ spec:
       app: shippingservice
   template:
     metadata:
+      annotations:
+        scheduling.volcano.sh/queue-name: "mq"
       labels:
         app: shippingservice
     spec:
@@ -828,6 +848,8 @@ spec:
       app: adservice
   template:
     metadata:
+      annotations:
+        scheduling.volcano.sh/queue-name: "mq"
       labels:
         app: adservice
     spec:
